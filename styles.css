@@ -1,0 +1,233 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100dvh;
+}
+
+.flexCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#content {
+    width: 100%;
+    height: 100%;
+}
+
+#messageBox {
+    width: 90%;
+    height: 300px;
+    flex-grow: 1;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+}
+
+#messageWrapper {
+  width: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 5px 3px;
+  padding: 20px;
+  overflow-y: auto;
+  
+  background-image: url(./wood.jpg);
+  background-repeat: repeat;
+  background-size: 100px 100px;
+  border-radius: 20px;
+
+  border: 4px solid #bda88a;
+  border-bottom: 7px solid #998567;
+  border-top-color: #d8cbb5;
+
+  box-shadow: 
+    0px 3px 1px rgba(0, 0, 0, 0.1),
+    0px 6px 12px rgba(92, 70, 52, 0.25);
+}
+
+#currentWordBox {
+  width: 100%;
+  height: 100px;
+  flex-grow: 0;
+  z-index: 1;
+
+  /* 1. Base color: A deep, rich mossy pond-green */
+  background-color: #233d1b;
+
+  /* 2. Textured Layer: A subtle noise/grain simulation to make it look like cozy felt or velvet lining */
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 3px 3px;
+
+  /* 3. The 3D Trim: A smooth, lighter wood-lip top edge where the dock meets the flannel */
+  border-top: 4px solid #bda88a;
+
+  /* 4. The Depth Shadow: A heavy inset shadow along the top edge to make the tray look sunken down into the screen */
+  box-shadow: 
+    inset 0px 8px 12px rgba(0, 0, 0, 0.6),
+    0px -4px 10px rgba(0, 0, 0, 0.15);
+
+  /* 5. Layout layout padding to center the tiles nicely inside the tray */
+  padding: 10px 20px;
+}
+
+.word, .punctuation, #messageWrapper > div {
+    padding: 5px 0px;
+    height: max-content;
+    user-select: none;
+
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.2rem;
+    color: #3e2f22;
+}
+
+.messageItem {
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+}
+
+.word {
+    color: transparent;
+    border: 1px solid transparent !important;
+}
+
+#messageWrapper > span, #messageWrapper > div > span.word {
+    /* background-color: transparent; */
+    box-shadow: inset 0px 0px 15px 3px rgba(0, 0, 0, 0.42);
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.active {
+    z-index: 2;
+    opacity: 1 !important;
+    display: block !important;
+}
+
+.punctuation {
+    margin-left: 2px;
+}
+
+#messageWrapper > div > span.word.highlighted, 
+#messageWrapper > span.word.highlighted {
+  /* 1. Brighten the interior of the carved slot with a warm, sun-lit golden glow */
+  /* background-color: rgba(251, 232, 166, 0.35); */
+  background-color: red;
+  
+  /* 2. Layer two shadows: 
+        - Keep a slightly softer inset shadow to preserve the depth 
+        - Add a bright, glowing outer drop-shadow that spills light out onto the birch wood */
+  box-shadow: 
+    inset 0px 0px 10px 1px rgba(0, 0, 0, 0.3), 
+    0px 0px 15px 4px rgba(249, 217, 73, 0.7);
+
+  /* 3. The yellow border frame to draw immediate functional attention */
+  outline: 2px solid #f9d949;
+  outline-offset: 1px;
+
+  /* 4. Smoothly pull the eye with a breathing effect */
+  animation: carved-glow 2s infinite ease-in-out;
+}
+
+/* 5. A physical breathing pulse that makes the light wax and wane */
+@keyframes carved-glow {
+  0%, 100% {
+    background-color: rgba(251, 232, 166, 0.25);
+    box-shadow: 
+      inset 0px 0px 10px 1px rgba(0, 0, 0, 0.3), 
+      0px 0px 12px 2px rgba(249, 217, 73, 0.5);
+    outline-color: rgba(249, 217, 73, 0.7);
+  }
+  50% {
+    background-color: rgba(251, 232, 166, 0.45);
+    box-shadow: 
+      inset 0px 0px 8px 1px rgba(0, 0, 0, 0.2), 
+      0px 0px 20px 6px rgba(249, 217, 73, 0.9);
+    outline-color: rgba(249, 217, 73, 1);
+  }
+}
+
+.frog-flannel-background {
+    background-color: #e5dac1;
+    background-image: 
+        linear-gradient(90deg, rgba(85, 122, 70, 0.4) 35%, transparent 15%),
+        linear-gradient(rgba(85, 122, 70, 0.4) 35%, transparent 15%);
+    background-size: 60px 60px;
+}
+
+.currentWord {
+    position: absolute;
+    background-color: #e2ecd7;
+    border: 1px solid rgba(92, 70, 52, 0.25);
+    cursor: pointer;
+    color: black;
+    user-select: none;
+    display: none;
+}
+
+#messageWrapper .word.placedWord, .active {
+  background-color: #f1e7d2 !important;
+  color: #3e2f22 !important; 
+  
+  border: 1px solid #c5b597 !important;
+  border-bottom: 3px solid #8e7a5c !important;
+  
+  box-shadow: 
+    0px 2px 1px rgba(0, 0, 0, 0.15),
+    0px 4px 8px rgba(62, 47, 34, 0.3) !important;
+    
+  background-image: 
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.6) 0%, transparent 20%),
+    linear-gradient(90deg, rgba(142, 122, 92, 0.05) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 4px 100%;
+
+  text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.5); 
+  
+  margin-bottom: -4px; 
+  vertical-align: middle;
+}
+
+#messageWrapper > div {
+  display: inline;
+  overflow: visible !important;
+}
+
+
+
+
+
+@media (max-width: 768px) {
+    #messageWrapper {
+        padding: 6px;
+        gap: 8px 4px;
+    }
+
+    .word, .punctuation, #messageWrapper > div {
+        font-size: 0.75rem;
+    }
+
+    #messageWrapper .word.placedWord {
+        padding: 4px 6px !important;
+        border-radius: 6px;
+    }
+
+    #currentWordBox {
+        height: auto;
+        min-height: 90px;
+        padding: 15px;
+    }
+
+    .punctuation {
+        padding: 0px;
+    }
+}
