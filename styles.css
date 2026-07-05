@@ -223,7 +223,8 @@ body {
         font-size: 1rem;
     }
 
-    #messageWrapper .word.placedWord {
+    /* #messageWrapper .word.placedWord, .currentWord { */
+    .word {
         padding: 4px 6px !important;
         border-radius: 6px;
     }
