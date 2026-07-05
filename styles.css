@@ -4,9 +4,15 @@
     box-sizing: border-box;
 }
 
+html, body {
+    overflow-x: hidden;
+    touch-action: pan-y;
+}
+
 body {
     width: 100vw;
     height: 100dvh;
+    overscroll-behavior: none;
 }
 
 .flexCenter {
@@ -173,6 +179,7 @@ body {
     color: black;
     user-select: none;
     display: none;
+    touch-action: none;
 }
 
 #messageWrapper .word.placedWord, .active {
@@ -213,7 +220,7 @@ body {
     }
 
     .word, .punctuation, #messageWrapper > div {
-        font-size: 0.75rem;
+        font-size: 1rem;
     }
 
     #messageWrapper .word.placedWord {

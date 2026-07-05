@@ -93,22 +93,41 @@ function displayMessageItems(items)
         draggableIDs.push(`draggable${item.id}`);
         itemHTML.classList.add("currentWord");
         itemHTML.setAttribute("data-itemNum", `${item.id}`);
-        itemHTML.addEventListener("mousedown", (e) => {
+
+        // itemHTML.addEventListener("mousedown", (e) => {
+        //     isDragging = true;
+
+        //     currentWord = e.target;
+        //     e.target.style.pointerEvents = "none";
+        //     let itemNum = e.target.getAttribute("data-itemNum");
+        //     let targetItem = document.getElementById(`item${itemNum}`);
+        //     targetItem.classList.toggle("highlighted");
+
+        //     targetItem.addEventListener("mouseenter", () => {
+        //         isHovering = true;
+        //     });
+        //     targetItem.addEventListener("mouseleave", () => {
+        //         isHovering = false;
+        //     });
+        // });
+
+        function startDrag(e) {
             isDragging = true;
-
+            
+            // Support both mouse clicks and finger touches
+            const touch = e.touches ? e.touches[0] : e;
             currentWord = e.target;
-            e.target.style.pointerEvents = "none";
-            let itemNum = e.target.getAttribute("data-itemNum");
+            
+            currentWord.style.pointerEvents = "none";
+            let itemNum = currentWord.getAttribute("data-itemNum");
             let targetItem = document.getElementById(`item${itemNum}`);
-            targetItem.classList.toggle("highlighted");
+            targetItem.classList.add("highlighted");
+        }
 
-            targetItem.addEventListener("mouseenter", () => {
-                isHovering = true;
-            });
-            targetItem.addEventListener("mouseleave", () => {
-                isHovering = false;
-            });
-        });
+        // Attach to both event types
+        itemHTML.addEventListener("mousedown", startDrag);
+        itemHTML.addEventListener("touchstart", startDrag, { passive: true });
+
         currentWordBox.appendChild(itemHTML);
     }
     return(draggableIDs);
@@ -150,51 +169,110 @@ let currentWordIndex = 0;
 let isDragging = false;
 let isHovering = false; // Is the currentWord on top of the target
 
-window.addEventListener("mouseup", () => {
-    isDragging = false;
+// window.addEventListener("mouseup", () => {
+//     isDragging = false;
 
-    if (currentWord) {
-        let itemNum = currentWord.getAttribute("data-itemNum");
-        let targetItem = document.getElementById(`item${itemNum}`);
+//     if (currentWord) {
+//         let itemNum = currentWord.getAttribute("data-itemNum");
+//         let targetItem = document.getElementById(`item${itemNum}`);
 
-        if (!isHovering) {
-            currentWord.style.top = "";
-            currentWord.style.left = "";
-            currentWord.style.pointerEvents = "auto";
-        }
-        else {
-            currentWord.remove();
-            currentWordIndex++;
-            if (draggableIDs[currentWordIndex]) { // Safe check in case it's the last word
-                document.getElementById(draggableIDs[currentWordIndex]).classList.toggle("active");
-            }
-            targetItem.classList.toggle("placedWord");
-        }
+//         if (!isHovering) {
+//             currentWord.style.top = "";
+//             currentWord.style.left = "";
+//             currentWord.style.pointerEvents = "auto";
+//         }
+//         else {
+//             currentWord.remove();
+//             currentWordIndex++;
+//             if (draggableIDs[currentWordIndex]) { // Safe check in case it's the last word
+//                 document.getElementById(draggableIDs[currentWordIndex]).classList.toggle("active");
+//             }
+//             targetItem.classList.toggle("placedWord");
+//         }
         
-        targetItem.classList.toggle("highlighted");
+//         targetItem.classList.toggle("highlighted");
 
-        // Remove event listeners by replacing with clone
-        let newEl = targetItem.cloneNode(true);
-        targetItem.replaceWith(newEl);
+//         // Remove event listeners by replacing with clone
+//         let newEl = targetItem.cloneNode(true);
+//         targetItem.replaceWith(newEl);
 
-        currentWord = null;
-        isHovering = false;
+//         currentWord = null;
+//         isHovering = false;
+//     }
+// });
+
+function systemDrop() {
+    if (!isDragging || !currentWord) return;
+    
+    isDragging = false;
+    let itemNum = currentWord.getAttribute("data-itemNum");
+    let targetItem = document.getElementById(`item${itemNum}`);
+
+    if (!isHovering) {
+        currentWord.style.top = "";
+        currentWord.style.left = "";
+        currentWord.style.pointerEvents = "auto"; 
+        targetItem.classList.remove("highlighted");
+    } else {
+        currentWord.remove();
+        currentWordIndex++;
+        if (draggableIDs[currentWordIndex]) {
+            document.getElementById(draggableIDs[currentWordIndex]).classList.toggle("active");
+        }
+        targetItem.classList.remove("highlighted");
+        targetItem.classList.add("placedWord");
     }
-});
 
-content.addEventListener("mousemove", (e) => {
-    if (!isDragging) {return;}
+    currentWord = null;
+    isHovering = false;
+}
+
+window.addEventListener("mouseup", systemDrop);
+window.addEventListener("touchend", systemDrop);
+
+// content.addEventListener("mousemove", (e) => {
+//     if (!isDragging) {return;}
+//     let rect = content.getBoundingClientRect();
+
+//     // Calculate relative positions
+//     const x = e.clientX - rect.left;
+//     const y = e.clientY - rect.top;
+
+//     // Move the current word
+//     currentWord.style.top = y - currentWord.offsetHeight/2 + "px";
+//     currentWord.style.left = x - currentWord.offsetWidth/2 + "px";
+// });
+
+function systemMove(e) {
+    if (!isDragging || !currentWord) return;
+
+    e.preventDefault();
+
+    // Grab coordinates safely from mouse or touch event
+    const touch = e.touches ? e.touches[0] : e;
     let rect = content.getBoundingClientRect();
 
-    // Calculate relative positions
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
 
-    // Move the current word
-    currentWord.style.top = y - currentWord.offsetHeight/2 + "px";
-    currentWord.style.left = x - currentWord.offsetWidth/2 + "px";
-});
+    // Move the current word tile
+    currentWord.style.top = y - currentWord.offsetHeight / 2 + "px";
+    currentWord.style.left = x - currentWord.offsetWidth / 2 + "px";
 
-// const timeoutId = setTimeout(() => {
-//     document.getElementById("messageWrapper").style.background = "url(./wood.jpg)";
-// }, 2000);
+    // --- TOUCH HOVER DETECTION FIX ---
+    // Check what element is physically under the user's finger/cursor right now
+    let elementUnderCursor = document.elementFromPoint(touch.clientX, touch.clientY);
+    
+    let itemNum = currentWord.getAttribute("data-itemNum");
+    let targetItem = document.getElementById(`item${itemNum}`);
+
+    // If the element under the finger is the target slot (or inside it), set hovering to true
+    if (elementUnderCursor === targetItem || targetItem.contains(elementUnderCursor)) {
+        isHovering = true;
+    } else {
+        isHovering = false;
+    }
+}
+
+content.addEventListener("mousemove", systemMove);
+content.addEventListener("touchmove", systemMove, { passive: false });
