@@ -1,5 +1,3 @@
-// TODO
-// - 
 
 class MessageItem
 {
@@ -94,23 +92,6 @@ function displayMessageItems(items)
         itemHTML.classList.add("currentWord");
         itemHTML.setAttribute("data-itemNum", `${item.id}`);
 
-        // itemHTML.addEventListener("mousedown", (e) => {
-        //     isDragging = true;
-
-        //     currentWord = e.target;
-        //     e.target.style.pointerEvents = "none";
-        //     let itemNum = e.target.getAttribute("data-itemNum");
-        //     let targetItem = document.getElementById(`item${itemNum}`);
-        //     targetItem.classList.toggle("highlighted");
-
-        //     targetItem.addEventListener("mouseenter", () => {
-        //         isHovering = true;
-        //     });
-        //     targetItem.addEventListener("mouseleave", () => {
-        //         isHovering = false;
-        //     });
-        // });
-
         function startDrag(e) {
             isDragging = true;
             
@@ -156,8 +137,9 @@ function randIntBetween(a, b) {
 
 // Functionality assumes that the message does not contain double punctuation for !!, ??, ..., etc.
 // const message = "This is a test message, so please enjoy it. Say hi! Or will you not?? Who knows?";
-const message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+// const message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
 // const message = "Hi there, you."
+const message = "Dear Kaylin, Happy Birthday! I wanted to make you an experience. Enjoy? Enjoy. I hope you appreciate the theme; it is inspired by your desk setup! Anyway, I hope that you enjoy your birthday. You're a cool sister, ya know? I always enjoy your character, both the hard-working woman and the goofy collector of many trinkets. I'll keep this short so that you don't suffer from building this letter. Toodles, my dude. Nole.";
 
 let items = deconstruct(message);
 let draggableIDs = displayMessageItems(items);
@@ -168,38 +150,6 @@ let currentWord;
 let currentWordIndex = 0;
 let isDragging = false;
 let isHovering = false; // Is the currentWord on top of the target
-
-// window.addEventListener("mouseup", () => {
-//     isDragging = false;
-
-//     if (currentWord) {
-//         let itemNum = currentWord.getAttribute("data-itemNum");
-//         let targetItem = document.getElementById(`item${itemNum}`);
-
-//         if (!isHovering) {
-//             currentWord.style.top = "";
-//             currentWord.style.left = "";
-//             currentWord.style.pointerEvents = "auto";
-//         }
-//         else {
-//             currentWord.remove();
-//             currentWordIndex++;
-//             if (draggableIDs[currentWordIndex]) { // Safe check in case it's the last word
-//                 document.getElementById(draggableIDs[currentWordIndex]).classList.toggle("active");
-//             }
-//             targetItem.classList.toggle("placedWord");
-//         }
-        
-//         targetItem.classList.toggle("highlighted");
-
-//         // Remove event listeners by replacing with clone
-//         let newEl = targetItem.cloneNode(true);
-//         targetItem.replaceWith(newEl);
-
-//         currentWord = null;
-//         isHovering = false;
-//     }
-// });
 
 function systemDrop() {
     if (!isDragging || !currentWord) return;
@@ -229,19 +179,6 @@ function systemDrop() {
 
 window.addEventListener("mouseup", systemDrop);
 window.addEventListener("touchend", systemDrop);
-
-// content.addEventListener("mousemove", (e) => {
-//     if (!isDragging) {return;}
-//     let rect = content.getBoundingClientRect();
-
-//     // Calculate relative positions
-//     const x = e.clientX - rect.left;
-//     const y = e.clientY - rect.top;
-
-//     // Move the current word
-//     currentWord.style.top = y - currentWord.offsetHeight/2 + "px";
-//     currentWord.style.left = x - currentWord.offsetWidth/2 + "px";
-// });
 
 function systemMove(e) {
     if (!isDragging || !currentWord) return;
